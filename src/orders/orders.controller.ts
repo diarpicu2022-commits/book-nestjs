@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
 interface Order {
 id: string;
@@ -60,5 +60,29 @@ getOrderByPago(@Param('Pago') Pago: string) {
     return order;
 
 
+}
+
+// Endpoint para crear un pedido
+@Post()
+createOrder(@Body() order: Order) {
+    console.log('Pedido recibido:', order);
+    this.orders.push(order);
+    return {
+        message: 'Pedido creado correctamente',
+        data: order
+    };
+}
+
+// Endpoint para eliminar un pedido por su ID
+@Delete('id/:id')
+deleteOrder(@Param('id') id: string) {
+    console.log('ID recibido:', id);
+    const position = this.orders.findIndex(order => order.id === id);
+    if (position === -1) {
+        return { message: 'Pedido no encontrado' };
+    }
+    this.orders.splice(position, 1);
+    console.log('Pedido eliminado:', id);
+    return { message: 'Pedido eliminado correctamente' };
 }
 }
