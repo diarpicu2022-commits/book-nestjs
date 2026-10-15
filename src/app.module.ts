@@ -1,23 +1,31 @@
 import { Module } from '@nestjs/common';
-import { createObserveModule } from '@nestjs/observe';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersController } from './users/users.controller';
-import { OrdersController } from './orders/orders.controller';
-
-export const { ObserveModule, ObserveInstrument } = createObserveModule();
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
+import { OrdersModule } from './orders/orders.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Env } from './env.model';
 
 @Module({
   imports: [
-    // Distributed tracing, auto-correlated logs, request/job metrics, error
-    // telemetry, alarms, and more — out of the box. Sign up at https://observe.nestjs.com
-    ObserveModule.forRoot({
-      appKey: 'YOUR_APP_KEY',
-      appSecret: 'YOUR_APP_SECRET',
-      serviceId: 'book-nestjs',
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
+    TypeOrmModule.forRootAsync({
+      useFactory: (configService: ConfigService<Env>) => ({
+        type: 'postgres',
+        host: configService.getOrThrow('POSTGRES_HOST'),
+        port: Number(configService.getOrThrow('POSTGRES_PORT')),
+        username: configService.getOrThrow('POSTGRES_USER'),
+        password: configService.getOrThrow('POSTGRES_PASSWORD'),
+        database: configService.getOrThrow('POSTGRES_DB'),
+        autoLoadEntities: true,
+        synchronize: true,
+        entities: [],
+      }),
+      inject: [ConfigService],
+    }),
+    UsersModule,
+    OrdersModule,
   ],
-  controllers: [AppController, UsersController, OrdersController],
-  providers: [AppService],
 })
 export class AppModule {}
