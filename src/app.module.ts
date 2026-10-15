@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
+import { OrdersModule } from './orders/orders.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Env } from './env.model';
 
@@ -24,6 +25,7 @@ import { Env } from './env.model';
       inject: [ConfigService],
     }),
     UsersModule,
+    OrdersModule,
   ],
 })
 export class AppModule {}
