@@ -1,5 +1,5 @@
-export interface Order {
-  id: string;
+export interface IOrder {
+  id: number;
   producto: string;
   cantidad: number;
   precio: number;
