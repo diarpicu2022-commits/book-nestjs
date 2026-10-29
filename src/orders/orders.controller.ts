@@ -4,10 +4,11 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
-import { CreateOrderDto, UpdateOrderDto } from './order.dto';
+import { CreateOrderDto, UpdateOrderDto } from './dtos/order.dto';
 import { OrdersService } from './orders.service';
 
 @Controller('orders')
@@ -20,7 +21,7 @@ export class OrdersController {
   }
 
   @Get(':id')
-  getOrderById(@Param('id') id: string) {
+  getOrderById(@Param('id', ParseIntPipe) id: number) {
     return this.ordersService.findById(id);
   }
 
@@ -35,12 +36,12 @@ export class OrdersController {
   }
 
   @Delete(':id')
-  deleteOrder(@Param('id') id: string) {
+  deleteOrder(@Param('id', ParseIntPipe) id: number) {
     return this.ordersService.delete(id);
   }
 
   @Put(':id')
-  updateOrder(@Param('id') id: string, @Body() changes: UpdateOrderDto) {
+  updateOrder(@Param('id', ParseIntPipe) id: number, @Body() changes: UpdateOrderDto) {
     return this.ordersService.update(id, changes);
   }
 }
