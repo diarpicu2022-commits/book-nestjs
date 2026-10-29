@@ -1,4 +1,6 @@
-import { IsInt, IsNotEmpty, IsNumber, IsPositive, IsString } from "class-validator";
+import { IsInt, IsNotEmpty, IsNumber, IsPositive, IsString, ValidateNested } from "class-validator";
+import { CreateEnvioDto } from "./envio.dto";
+import { Type } from "class-transformer";
 
 export class CreateOrderDto {
 
@@ -17,6 +19,11 @@ export class CreateOrderDto {
     @IsString()
     @IsNotEmpty()
     Pago: string;
+
+    @ValidateNested()
+    @Type(() => CreateEnvioDto)
+    @IsNotEmpty()
+    envio: CreateEnvioDto;
 }
 
 export class UpdateOrderDto {
