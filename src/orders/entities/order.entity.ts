@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Envio } from "./envio.entity";
 
 @Entity({
     name: "orders",
@@ -35,4 +36,8 @@ export class Order {
             name: "updated_at"
         })
     updatedAt: Date;
+
+    @OneToOne(() => Envio, { nullable: false, cascade: true })
+    @JoinColumn({ name: "envio_id" })
+    envio: Envio
 }
